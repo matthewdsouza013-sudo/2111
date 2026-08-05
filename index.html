@@ -5,34 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy 21st Birthday Ajoyce!!!</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&family=Pacifico&family=Righteous&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Pacifico&family=Righteous&display=swap');
+
+        :root {
+            --primary: #00f0ff;
+            --secondary: #ff0055;
+            --gold: #ffcf00;
+            --bg: #03030b;
+        }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: #050510;
+            background-color: var(--bg);
             overflow: hidden;
             height: 100vh;
             font-family: 'Montserrat', sans-serif;
             user-select: none;
             color: white;
+            perspective: 1200px;
         }
 
-        /* --- DYNAMIC NEON BACKGROUND --- */
+        /* --- IMMERSIVE BACKGROUND --- */
         .celebration-bg {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: 
-                radial-gradient(circle at 15% 50%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 50% 80%, rgba(255, 0, 128, 0.15) 0%, transparent 50%);
+                radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 85, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(255, 207, 0, 0.05) 0%, transparent 60%);
             z-index: 0;
-            animation: pulseBg 10s infinite alternate;
+            animation: breathe 8s ease-in-out infinite alternate;
         }
 
-        @keyframes pulseBg {
-            0% { filter: hue-rotate(0deg) brightness(1); }
-            100% { filter: hue-rotate(30deg) brightness(1.2); }
+        @keyframes breathe {
+            0% { transform: scale(1); filter: hue-rotate(0deg); }
+            100% { transform: scale(1.1); filter: hue-rotate(15deg); }
         }
 
         canvas {
@@ -41,250 +49,331 @@
             top: 0; left: 0;
             z-index: 1;
             cursor: crosshair;
+            mix-blend-mode: screen;
         }
 
-        /* --- INTRO SCREEN --- */
+        /* --- INTRO SCREEN WITH AVATAR --- */
         .intro-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
+            background: rgba(3, 3, 11, 0.95);
+            backdrop-filter: blur(15px);
             z-index: 9999;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: opacity 1s ease-in-out, transform 1s ease;
-        }
-        
-        .intro-title {
-            font-family: 'Righteous', cursive;
-            font-size: 3rem;
-            margin-bottom: 30px;
-            background: linear-gradient(90deg, #00d2ff, #ffd700);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 5px;
-            animation: float 3s ease-in-out infinite;
+            transition: opacity 1.2s cubic-bezier(0.8, 0, 0.2, 1), transform 1.2s cubic-bezier(0.8, 0, 0.2, 1);
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+        .avatar-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Spinning High-Tech Ring */
+        .avatar-container::before {
+            content: '';
+            position: absolute;
+            top: -15px; left: -15px; right: -15px; bottom: -15px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: var(--primary);
+            border-bottom-color: var(--secondary);
+            animation: spin 3s linear infinite;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .avatar-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            box-shadow: 0 0 50px rgba(255, 207, 0, 0.4);
+            z-index: 2;
+        }
+
+        .intro-title {
+            font-family: 'Righteous', cursive;
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, var(--primary), var(--gold), var(--secondary));
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            animation: shine 3s linear infinite;
         }
 
         .enter-btn {
-            padding: 15px 50px;
+            padding: 16px 60px;
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
             font-size: 1.1rem;
-            color: #000;
-            background: #ffd700;
-            border: none;
-            border-radius: 4px;
+            color: #fff;
+            background: transparent;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
-            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 0 15px rgba(0, 240, 255, 0.2);
+            letter-spacing: 3px;
             text-transform: uppercase;
-            transition: 0.3s;
+            transition: 0.4s;
             position: relative;
             overflow: hidden;
         }
-        
-        .enter-btn:hover {
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
-            transform: scale(1.05);
-            background: #fff;
+
+        .enter-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,240,255,0.4), transparent);
+            transition: 0.5s;
         }
+
+        .enter-btn:hover {
+            background: rgba(0, 240, 255, 0.1);
+            transform: scale(1.05);
+            box-shadow: 0 0 40px var(--primary), inset 0 0 20px var(--primary);
+            border-color: #fff;
+        }
+        .enter-btn:hover::after { left: 100%; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes shine { to { background-position: 200% center; } }
 
         /* --- UI CONTROLS --- */
         .ui-container {
             position: absolute;
             bottom: 40px;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translateX(-50%) translateY(30px);
             z-index: 100;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 2s 1s;
+            transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1) 0.5s;
         }
 
         .ui-container.visible {
             opacity: 1;
             pointer-events: auto;
+            transform: translateX(-50%) translateY(0);
         }
 
         .buttons-row {
             display: flex;
             gap: 15px;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 10px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 50px;
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
 
         .nav-btn {
             background: transparent;
-            border: 1px solid transparent;
+            border: none;
             color: rgba(255, 255, 255, 0.6);
             padding: 12px 25px;
             font-family: 'Righteous', cursive;
             font-size: 1rem;
             letter-spacing: 2px;
-            border-radius: 8px;
+            border-radius: 30px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s;
+            position: relative;
         }
         
         .nav-btn.active, .nav-btn:hover {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: #00d2ff;
-            color: #00d2ff;
-            text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2) inset;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            text-shadow: 0 0 10px #fff;
+        }
+        
+        .nav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: 5px; left: 50%; transform: translateX(-50%);
+            width: 40%; height: 3px;
+            background: var(--gold);
+            border-radius: 5px;
+            box-shadow: 0 0 10px var(--gold);
         }
 
         .hint-text {
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.5);
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             text-transform: uppercase;
         }
 
-        /* --- 3D BIRTHDAY CARD --- */
+        /* --- THE NEW GLASS OVERLAY CARD --- */
         .card-wrapper {
             position: absolute;
             top: 50%; left: 50%;
-            width: 800px;
-            max-width: 90%;
-            height: 500px;
-            transform: translate(-50%, -50%) perspective(1500px) rotateX(10deg) translateY(50px);
+            width: 1000px;
+            max-width: 95%;
+            height: 600px;
+            transform: translate(-50%, -50%) perspective(2000px) rotateX(20deg) scale(0.9);
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.6s, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: opacity 0.8s, transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 200;
         }
 
         .card-wrapper.active {
             opacity: 1;
             pointer-events: auto;
-            transform: translate(-50%, -50%) perspective(1500px) rotateX(0deg) translateY(0);
+            transform: translate(-50%, -50%) perspective(2000px) rotateX(0deg) scale(1);
         }
 
         .birthday-card {
             width: 100%;
             height: 100%;
-            display: flex;
-            background: linear-gradient(135deg, rgba(20,20,30,0.9), rgba(10,10,15,0.95));
-            border-radius: 24px;
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255, 215, 0, 0.1) inset;
-            backdrop-filter: blur(25px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.9), inset 0 0 30px rgba(0,240,255,0.2);
             overflow: hidden;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out; /* For JS tilt */
-        }
-
-        .card-visual {
-            flex: 1;
-            background: url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover;
             position: relative;
-        }
-        
-        .card-visual::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(10,10,15,0.95));
+            transform-style: preserve-3d;
         }
 
-        .card-content {
-            flex: 1.2;
-            padding: 50px 40px;
+        /* Image serves as the full background of the card */
+        .birthday-card > img {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            transition: transform 0.3s ease-out;
+        }
+
+        /* The overlapping frosted glass text panel */
+        .glass-panel {
+            position: absolute;
+            top: 5%; right: 5%;
+            width: 50%; height: 90%;
+            background: rgba(10, 10, 15, 0.75);
+            backdrop-filter: blur(25px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: -10px 10px 40px rgba(0,0,0,0.5);
+            z-index: 2;
+            padding: 40px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            position: relative;
+            transform: translateZ(40px); /* 3D pop off the image */
         }
 
-        .card-content h2 {
+        .glass-panel h2 {
             font-family: 'Pacifico', cursive;
             font-size: 3.5rem;
-            margin: 0 0 15px 0;
-            background: linear-gradient(to right, #ffd700, #ff8c00);
+            margin: 0 0 20px 0;
+            background: linear-gradient(45deg, var(--gold), #ff8c00);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+            text-shadow: 2px 2px 10px rgba(255, 207, 0, 0.3);
         }
 
         .typewriter-text {
             font-size: 1.05rem;
             line-height: 1.8;
-            color: #ddd;
-            min-height: 180px;
+            color: #f0f0f0;
             font-weight: 300;
+            min-height: 250px;
         }
-        
+
         .close-btn {
             align-self: flex-start;
             margin-top: 20px;
-            background: transparent;
-            border: 1px solid #ffd700;
-            color: #ffd700;
-            padding: 10px 30px;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            border: none;
+            color: #fff;
+            padding: 12px 35px;
             border-radius: 50px;
             cursor: pointer;
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            text-transform: uppercase;
         }
         
         .close-btn:hover {
-            background: #ffd700;
-            color: #000;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 0, 85, 0.5);
         }
 
         /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            .birthday-card { flex-direction: column; }
-            .card-visual { flex: 0.6; }
-            .card-visual::after { background: linear-gradient(to bottom, transparent, rgba(10,10,15,0.95)); }
-            .card-content { padding: 30px 20px; flex: 1.4; }
-            .card-content h2 { font-size: 2.5rem; }
-            .intro-title { font-size: 2rem; }
-            .buttons-row { flex-wrap: wrap; justify-content: center; }
+        @media (max-width: 900px) {
+            .glass-panel {
+                width: 90%;
+                height: auto;
+                bottom: 5%;
+                top: auto;
+                left: 5%; right: 5%;
+                padding: 25px;
+            }
+            .glass-panel h2 { font-size: 2.8rem; }
+            .typewriter-text { min-height: 200px; font-size: 0.95rem; }
+            .intro-title { font-size: 2.5rem; }
+            .avatar-container { width: 160px; height: 160px; }
+            .buttons-row { flex-wrap: wrap; justify-content: center; padding: 10px; }
+            .nav-btn { font-size: 0.8rem; padding: 10px 15px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- INTRO SCREEN -->
     <div class="intro-screen" id="intro">
+        <!-- 'a.jpg' goes here. Fallback provided just in case. -->
+        <div class="avatar-container">
+            <img src="a.jpg" alt="Ajoyce" onerror="this.src='https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400';">
+        </div>
         <div class="intro-title">SYSTEM_INIT: LEVEL 21</div>
-        <button class="enter-btn" onclick="startApp()">Unlock The Celebration</button>
+        <button class="enter-btn" onclick="startApp()">Unlock The Universe</button>
     </div>
 
+    <!-- BACKGROUND -->
     <div class="celebration-bg"></div>
     <canvas id="canvas"></canvas>
 
+    <!-- NEW OUT-OF-THE-BOX CARD -->
     <div class="card-wrapper" id="cardModal">
         <div class="birthday-card" id="tiltCard">
-            <!-- Replace the background URL in CSS (.card-visual) to put an actual photo of the birthday person! -->
-            <div class="card-visual"></div> 
-            <div class="card-content">
+            
+            <!-- 'a2.jpg' fills the entire background. Fallback provided. -->
+            <img id="cardBgImg" src="a2.jpg" alt="Ajoyce 21st" onerror="this.src='https://images.unsplash.com/photo-1530103862676-de8892bc9524?w=1000';">
+            
+            <!-- Floating Frosted Glass Panel -->
+            <div class="glass-panel">
                 <h2>Happy 21st!</h2>
                 <div class="typewriter-text" id="msgArea"></div>
                 <button class="close-btn" onclick="closeLetter()">CONTINUE PARTY</button>
             </div>
+            
         </div>
     </div>
 
+    <!-- NAVIGATION -->
     <div class="ui-container" id="ui">
         <div class="hint-text">✨ Tap the background for fireworks ✨</div>
         <div class="buttons-row">
@@ -294,7 +383,7 @@
         </div>
     </div>
 
-    <!-- Background Audio: Upbeat electronic track -->
+    <!-- AUDIO -->
     <audio id="bgMusic" loop>
         <source src="https://assets.mixkit.co/music/preview/mixkit-raising-me-higher-34.mp3" type="audio/mpeg">
     </audio>
@@ -303,12 +392,10 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         let width, height;
-        
         let particles = [];
         let fireworks = [];
         let isScrambling = false;
         
-        // --- SETUP ---
         function resize() {
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
@@ -316,97 +403,106 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // Mouse Tracker for interactions
-        let mouse = { x: null, y: null, radius: 120 };
+        // Mouse Tracker
+        let mouse = { x: -1000, y: -1000, radius: 120 };
         window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('mouseout', () => { mouse.x = -1000; mouse.y = -1000; });
         
-        // Firework on click
         window.addEventListener('pointerdown', e => {
             if(document.getElementById('cardModal').classList.contains('active')) return;
             createFirework(e.clientX, e.clientY);
         });
 
-        // --- PARTICLE CLASS (Text Morphing) ---
+        // --- ENHANCED PARTICLE CLASS ---
         class Particle {
-            constructor(x, y, color) {
+            constructor(x, y) {
                 this.x = Math.random() * width;
                 this.y = Math.random() * height;
                 this.destX = x;
                 this.destY = y;
-                this.vx = (Math.random() - 0.5) * 10;
-                this.vy = (Math.random() - 0.5) * 10;
-                this.size = Math.random() * 2.5 + 1;
-                this.color = color || '#00d2ff';
-                this.friction = 0.85; // Bouncier physics
-                this.spring = 0.05;
+                this.vx = (Math.random() - 0.5) * 25;
+                this.vy = (Math.random() - 0.5) * 25;
+                this.size = Math.random() * 2 + 1;
+                this.friction = 0.85; 
+                this.spring = 0.06;
+                this.color = '#fff';
             }
-
             update() {
                 if (isScrambling) {
-                    this.x += (Math.random() - 0.5) * 40;
-                    this.y += (Math.random() - 0.5) * 40;
-                    return;
-                }
+                    this.vx += (Math.random() - 0.5) * 10;
+                    this.vy += (Math.random() - 0.5) * 10;
+                } else {
+                    let dx = this.destX - this.x;
+                    let dy = this.destY - this.y;
+                    this.vx += dx * this.spring;
+                    this.vy += dy * this.spring;
 
-                // Spring towards destination
-                let dx = this.destX - this.x;
-                let dy = this.destY - this.y;
-                
-                this.vx += dx * this.spring;
-                this.vy += dy * this.spring;
-
-                // Mouse Repulsion
-                if(mouse.x != null) {
+                    // Mouse Repulsion
                     let mDx = mouse.x - this.x;
                     let mDy = mouse.y - this.y;
                     let dist = Math.sqrt(mDx*mDx + mDy*mDy);
                     if (dist < mouse.radius) {
                         let force = (mouse.radius - dist) / mouse.radius;
                         let angle = Math.atan2(mDy, mDx);
-                        this.vx -= Math.cos(angle) * force * 10;
-                        this.vy -= Math.sin(angle) * force * 10;
+                        this.vx -= Math.cos(angle) * force * 15;
+                        this.vy -= Math.sin(angle) * force * 15;
                     }
                 }
-
                 this.vx *= this.friction;
                 this.vy *= this.friction;
                 this.x += this.vx;
                 this.y += this.vy;
             }
-
             draw() {
+                // Glow effect
+                ctx.globalAlpha = 0.4;
                 ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 2.5, 0, Math.PI*2);
+                ctx.fill();
+                
+                // Core
+                ctx.globalAlpha = 1.0;
+                ctx.fillStyle = '#fff';
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
                 ctx.fill();
             }
         }
 
-        // --- FIREWORKS SYSTEM ---
+        // --- ENHANCED FIREWORKS ---
         class FireworkParticle {
-            constructor(x, y) {
+            constructor(x, y, isSpark) {
                 this.x = x;
                 this.y = y;
                 let angle = Math.random() * Math.PI * 2;
-                let speed = Math.random() * 8 + 2;
+                let speed = isSpark ? Math.random() * 4 + 1 : Math.random() * 12 + 2;
                 this.vx = Math.cos(angle) * speed;
                 this.vy = Math.sin(angle) * speed;
-                this.size = Math.random() * 3 + 1;
+                this.size = Math.random() * 2.5 + 1;
                 this.life = 1.0;
                 this.decay = Math.random() * 0.02 + 0.01;
                 
-                const colors = ['#ffd700', '#ff007f', '#00d2ff', '#ffffff'];
+                const colors = ['#00f0ff', '#ff0055', '#ffcf00', '#ffffff'];
                 this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.isSpark = isSpark;
             }
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                this.vy += 0.15; // Gravity
+                this.vy += 0.1; // Gravity
+                this.vx *= 0.98; // Drag
                 this.life -= this.decay;
             }
             draw() {
                 ctx.globalAlpha = this.life;
-                ctx.fillStyle = this.color;
+                if(!this.isSpark) {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size * 1.5, 0, Math.PI*2);
+                    ctx.fill();
+                }
+                ctx.fillStyle = '#fff';
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
                 ctx.fill();
@@ -415,26 +511,22 @@
         }
 
         function createFirework(x, y) {
-            for(let i=0; i<60; i++) {
-                fireworks.push(new FireworkParticle(x, y));
-            }
+            for(let i=0; i<60; i++) fireworks.push(new FireworkParticle(x, y, false));
+            for(let i=0; i<30; i++) fireworks.push(new FireworkParticle(x, y, true));
         }
 
-        // --- MAIN LOOP ---
         function animate() {
-            // Dark trail effect
-            ctx.fillStyle = 'rgba(5, 5, 16, 0.3)'; 
+            // High end motion blur trail
+            ctx.fillStyle = 'rgba(3, 3, 11, 0.3)'; 
             ctx.fillRect(0, 0, width, height);
 
             particles.forEach(p => { p.update(); p.draw(); });
             
-            // Handle fireworks
             for(let i = fireworks.length - 1; i >= 0; i--) {
                 fireworks[i].update();
                 fireworks[i].draw();
                 if(fireworks[i].life <= 0) fireworks.splice(i, 1);
             }
-
             requestAnimationFrame(animate);
         }
         animate();
@@ -443,19 +535,14 @@
         function warpTo(text, btnElement) {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             if(btnElement) btnElement.classList.add('active');
-            
             closeLetter();
             
-            // Scramble effect
             isScrambling = true;
-            
             setTimeout(() => {
                 isScrambling = false;
                 calculateTargets(text);
-                
-                // Add a center firework pop when text changes
                 createFirework(width/2, height/2);
-            }, 600);
+            }, 500);
         }
 
         function calculateTargets(text) {
@@ -464,7 +551,6 @@
             tCanvas.width = width;
             tCanvas.height = height;
 
-            // Responsive sizing
             let fontSize = Math.min(width / 2.5, 300);
             if(text === '🥂') fontSize = Math.min(width / 3, 200);
 
@@ -475,37 +561,30 @@
             tCtx.fillText(text, width/2, height/2);
 
             let data = tCtx.getImageData(0, 0, width, height).data;
-            let step = window.innerWidth > 768 ? 6 : 8; // Optimize for mobile
+            let step = window.innerWidth > 768 ? 6 : 8; 
             let newTargets = [];
 
             for(let y=0; y<height; y+=step) {
                 for(let x=0; x<width; x+=step) {
                     if(data[(y*width+x)*4+3] > 128) {
-                        // Generate colors based on position
-                        let r = Math.floor((x / width) * 255);
-                        let g = 215; // Keeping gold/cyan tones
-                        let b = Math.floor((y / height) * 255);
+                        let pct = x / width;
                         let color = (text === '21') 
-                            ? `rgb(255, 215, ${b})` // Gold to white gradient
-                            : (Math.random() > 0.5 ? '#00d2ff' : '#ff007f'); // Cyan/Pink mix
-
+                            ? (pct < 0.5 ? '#ffcf00' : '#ff0055') // Gradient map
+                            : (Math.random() > 0.5 ? '#00f0ff' : '#ffffff');
                         newTargets.push({x, y, color});
                     }
                 }
             }
 
-            // Sync particle pool
+            newTargets.sort(() => Math.random() - 0.5);
+
             if (particles.length < newTargets.length) {
                 for (let i = particles.length; i < newTargets.length; i++) {
-                    particles.push(new Particle(Math.random()*width, Math.random()*height));
+                    particles.push(new Particle(width/2, height/2));
                 }
             } else {
                 particles.splice(newTargets.length);
             }
-
-            // Assign new targets
-            // Shuffle array so particles cross paths beautifully
-            newTargets.sort(() => Math.random() - 0.5);
 
             for (let i = 0; i < particles.length; i++) {
                 particles[i].destX = newTargets[i].x;
@@ -514,14 +593,31 @@
             }
         }
 
-        // --- 3D TILT EFFECT FOR CARD ---
+        // --- 3D TILT EFFECT ---
+        const cardWrapper = document.getElementById('cardModal');
         const card = document.getElementById('tiltCard');
+        const cardImg = document.getElementById('cardBgImg');
+        
         document.addEventListener('mousemove', (e) => {
-            if(!document.getElementById('cardModal').classList.contains('active')) return;
+            if(!cardWrapper.classList.contains('active')) return;
             
-            let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            let rect = cardWrapper.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let y = e.clientY - rect.top;
+            
+            let centerX = rect.width / 2;
+            let centerY = rect.height / 2;
+            
+            let rotateX = ((y - centerY) / centerY) * -10; 
+            let rotateY = ((x - centerX) / centerX) * 10;
+            
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            cardImg.style.transform = `scale(1.05) translate(${rotateY * -0.5}px, ${rotateX * 0.5}px)`; // Parallax bg
+        });
+
+        document.addEventListener('mouseleave', () => {
+            card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+            cardImg.style.transform = `scale(1) translate(0,0)`;
         });
 
         // --- LETTER LOGIC ---
@@ -531,32 +627,31 @@
                 btnElement.classList.add('active');
             }
             
-            // Scatter particles to background
-            particles.forEach(p => {
-                p.destX = Math.random() * width;
-                p.destY = Math.random() * height;
-                p.color = '#ffffff';
-                p.size = Math.random() * 1.5;
-            });
+            isScrambling = true;
+            setTimeout(() => {
+                isScrambling = false;
+                particles.forEach(p => {
+                    p.destX = Math.random() * width;
+                    p.destY = Math.random() * height;
+                    p.color = '#fff';
+                    p.size = Math.random() * 1.5;
+                });
+            }, 300);
 
-            document.getElementById('cardModal').classList.add('active');
-            
-            // Reset card tilt
-            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-            
+            cardWrapper.classList.add('active');
+            card.style.transform = `rotateX(0deg) rotateY(0deg)`;
             typeWriter();
         }
 
         function closeLetter() {
-            document.getElementById('cardModal').classList.remove('active');
+            cardWrapper.classList.remove('active');
         }
 
-        // --- TYPEWRITER ---
+        // --- TYPEWRITER (WITH EXACT CUSTOM MESSAGE) ---
         let typed = false;
         function typeWriter() {
             if(typed) return;
-            // EDIT THIS TEXT FOR THE BIRTHDAY PERSON
-            const text = "Welcome to Chapter 21 Baby!! 🥂✨A brand new chapter begins today, filled with endless opportunities, exciting adventures, and memories waiting to be made. \n\nYou've grown into an amazing person, and everyone who's lucky enough to know you is better for it especially me .Here's to chasing dreams, embracing every moment, and celebrating every little victory along the way.Cheers to the nights we won't remember, with the friends we'll never forget. 🍻Happy 21st Birthday! Today is all about celebrating you. Wishing you a year filled with happiness, success, laughter, and unforgettable moments with or without me. Make every page of this new chapter count! 🎉🎂";
+            const text = "Welcome to Chapter 21 Baby!! 🥂✨\n\nA brand new chapter begins today, filled with endless opportunities, exciting adventures, and memories waiting to be made.\n\nYou've grown into an amazing person, and everyone who's lucky enough to know you is better for it, especially me. Here's to chasing dreams, embracing every moment, and celebrating every little victory along the way.\n\nCheers to the nights we won't remember, with the friends we'll never forget. 🍻\n\nHappy 21st Birthday! Today is all about celebrating you. Wishing you a year filled with happiness, success, laughter, and unforgettable moments with or without me. Make every page of this new chapter count! 🎉🎂";
             
             const el = document.getElementById('msgArea');
             el.innerHTML = "";
@@ -569,20 +664,19 @@
                     clearInterval(interval);
                     typed = true;
                 }
-            }, 35);
+            }, 30);
         }
 
-        // --- APP START ---
+        // --- BOOT SEQUENCE ---
         function startApp() {
             const intro = document.getElementById('intro');
-            intro.style.transform = 'scale(1.2)';
+            intro.style.transform = 'scale(1.2) translateY(-50px)';
             intro.style.opacity = 0;
             
             setTimeout(() => {
                 intro.style.display = 'none';
                 document.getElementById('ui').classList.add('visible');
                 
-                // Play music automatically (Requires user interaction first, which the start button provides)
                 let bgMusic = document.getElementById('bgMusic');
                 bgMusic.volume = 0.5;
                 bgMusic.play().catch(e => console.log("Audio play prevented"));
