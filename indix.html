@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 21st Birthday!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&family=Pacifico&family=Righteous&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050510;
+            overflow: hidden;
+            height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+            user-select: none;
+            color: white;
+        }
+
+        /* --- DYNAMIC NEON BACKGROUND --- */
+        .celebration-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(0, 212, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(255, 215, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(255, 0, 128, 0.15) 0%, transparent 50%);
+            z-index: 0;
+            animation: pulseBg 10s infinite alternate;
+        }
+
+        @keyframes pulseBg {
+            0% { filter: hue-rotate(0deg) brightness(1); }
+            100% { filter: hue-rotate(30deg) brightness(1.2); }
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 1;
+            cursor: crosshair;
+        }
+
+        /* --- INTRO SCREEN --- */
+        .intro-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease-in-out, transform 1s ease;
+        }
+        
+        .intro-title {
+            font-family: 'Righteous', cursive;
+            font-size: 3rem;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, #00d2ff, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 5px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .enter-btn {
+            padding: 15px 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #000;
+            background: #ffd700;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .enter-btn:hover {
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+            transform: scale(1.05);
+            background: #fff;
+        }
+
+        /* --- UI CONTROLS --- */
+        .ui-container {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 2s 1s;
+        }
+
+        .ui-container.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .buttons-row {
+            display: flex;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 10px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 12px 25px;
+            font-family: 'Righteous', cursive;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .nav-btn.active, .nav-btn:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d2ff;
+            color: #00d2ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2) inset;
+        }
+
+        .hint-text {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* --- 3D BIRTHDAY CARD --- */
+        .card-wrapper {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 800px;
+            max-width: 90%;
+            height: 500px;
+            transform: translate(-50%, -50%) perspective(1500px) rotateX(10deg) translateY(50px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            z-index: 200;
+        }
+
+        .card-wrapper.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) perspective(1500px) rotateX(0deg) translateY(0);
+        }
+
+        .birthday-card {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            background: linear-gradient(135deg, rgba(20,20,30,0.9), rgba(10,10,15,0.95));
+            border-radius: 24px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255, 215, 0, 0.1) inset;
+            backdrop-filter: blur(25px);
+            overflow: hidden;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out; /* For JS tilt */
+        }
+
+        .card-visual {
+            flex: 1;
+            background: url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover;
+            position: relative;
+        }
+        
+        .card-visual::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(10,10,15,0.95));
+        }
+
+        .card-content {
+            flex: 1.2;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+        }
+
+        .card-content h2 {
+            font-family: 'Pacifico', cursive;
+            font-size: 3.5rem;
+            margin: 0 0 15px 0;
+            background: linear-gradient(to right, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+        }
+
+        .typewriter-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #ddd;
+            min-height: 180px;
+            font-weight: 300;
+        }
+        
+        .close-btn {
+            align-self: flex-start;
+            margin-top: 20px;
+            background: transparent;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 10px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: #ffd700;
+            color: #000;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .birthday-card { flex-direction: column; }
+            .card-visual { flex: 0.6; }
+            .card-visual::after { background: linear-gradient(to bottom, transparent, rgba(10,10,15,0.95)); }
+            .card-content { padding: 30px 20px; flex: 1.4; }
+            .card-content h2 { font-size: 2.5rem; }
+            .intro-title { font-size: 2rem; }
+            .buttons-row { flex-wrap: wrap; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="intro-screen" id="intro">
+        <div class="intro-title">SYSTEM_INIT: LEVEL 21</div>
+        <button class="enter-btn" onclick="startApp()">Unlock The Celebration</button>
+    </div>
+
+    <div class="celebration-bg"></div>
+    <canvas id="canvas"></canvas>
+
+    <div class="card-wrapper" id="cardModal">
+        <div class="birthday-card" id="tiltCard">
+            <!-- Replace the background URL in CSS (.card-visual) to put an actual photo of the birthday person! -->
+            <div class="card-visual"></div> 
+            <div class="card-content">
+                <h2>Happy 21st!</h2>
+                <div class="typewriter-text" id="msgArea"></div>
+                <button class="close-btn" onclick="closeLetter()">CONTINUE PARTY</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="ui-container" id="ui">
+        <div class="hint-text">✨ Tap the background for fireworks ✨</div>
+        <div class="buttons-row">
+            <button class="nav-btn active" onclick="warpTo('21', this)">LEVEL 21</button>
+            <button class="nav-btn" onclick="warpTo('🥂', this)">CHEERS</button>
+            <button class="nav-btn" onclick="openLetter(this)">OPEN CARD</button>
+        </div>
+    </div>
+
+    <!-- Background Audio: Upbeat electronic track -->
+    <audio id="bgMusic" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-raising-me-higher-34.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        
+        let particles = [];
+        let fireworks = [];
+        let isScrambling = false;
+        
+        // --- SETUP ---
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Mouse Tracker for interactions
+        let mouse = { x: null, y: null, radius: 120 };
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        
+        // Firework on click
+        window.addEventListener('pointerdown', e => {
+            if(document.getElementById('cardModal').classList.contains('active')) return;
+            createFirework(e.clientX, e.clientY);
+        });
+
+        // --- PARTICLE CLASS (Text Morphing) ---
+        class Particle {
+            constructor(x, y, color) {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.destX = x;
+                this.destY = y;
+                this.vx = (Math.random() - 0.5) * 10;
+                this.vy = (Math.random() - 0.5) * 10;
+                this.size = Math.random() * 2.5 + 1;
+                this.color = color || '#00d2ff';
+                this.friction = 0.85; // Bouncier physics
+                this.spring = 0.05;
+            }
+
+            update() {
+                if (isScrambling) {
+                    this.x += (Math.random() - 0.5) * 40;
+                    this.y += (Math.random() - 0.5) * 40;
+                    return;
+                }
+
+                // Spring towards destination
+                let dx = this.destX - this.x;
+                let dy = this.destY - this.y;
+                
+                this.vx += dx * this.spring;
+                this.vy += dy * this.spring;
+
+                // Mouse Repulsion
+                if(mouse.x != null) {
+                    let mDx = mouse.x - this.x;
+                    let mDy = mouse.y - this.y;
+                    let dist = Math.sqrt(mDx*mDx + mDy*mDy);
+                    if (dist < mouse.radius) {
+                        let force = (mouse.radius - dist) / mouse.radius;
+                        let angle = Math.atan2(mDy, mDx);
+                        this.vx -= Math.cos(angle) * force * 10;
+                        this.vy -= Math.sin(angle) * force * 10;
+                    }
+                }
+
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+                ctx.fill();
+            }
+        }
+
+        // --- FIREWORKS SYSTEM ---
+        class FireworkParticle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                let angle = Math.random() * Math.PI * 2;
+                let speed = Math.random() * 8 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.size = Math.random() * 3 + 1;
+                this.life = 1.0;
+                this.decay = Math.random() * 0.02 + 0.01;
+                
+                const colors = ['#ffd700', '#ff007f', '#00d2ff', '#ffffff'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.15; // Gravity
+                this.life -= this.decay;
+            }
+            draw() {
+                ctx.globalAlpha = this.life;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        function createFirework(x, y) {
+            for(let i=0; i<60; i++) {
+                fireworks.push(new FireworkParticle(x, y));
+            }
+        }
+
+        // --- MAIN LOOP ---
+        function animate() {
+            // Dark trail effect
+            ctx.fillStyle = 'rgba(5, 5, 16, 0.3)'; 
+            ctx.fillRect(0, 0, width, height);
+
+            particles.forEach(p => { p.update(); p.draw(); });
+            
+            // Handle fireworks
+            for(let i = fireworks.length - 1; i >= 0; i--) {
+                fireworks[i].update();
+                fireworks[i].draw();
+                if(fireworks[i].life <= 0) fireworks.splice(i, 1);
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // --- MORPHING LOGIC ---
+        function warpTo(text, btnElement) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+            
+            closeLetter();
+            
+            // Scramble effect
+            isScrambling = true;
+            
+            setTimeout(() => {
+                isScrambling = false;
+                calculateTargets(text);
+                
+                // Add a center firework pop when text changes
+                createFirework(width/2, height/2);
+            }, 600);
+        }
+
+        function calculateTargets(text) {
+            let tCanvas = document.createElement('canvas');
+            let tCtx = tCanvas.getContext('2d');
+            tCanvas.width = width;
+            tCanvas.height = height;
+
+            // Responsive sizing
+            let fontSize = Math.min(width / 2.5, 300);
+            if(text === '🥂') fontSize = Math.min(width / 3, 200);
+
+            tCtx.font = `900 ${fontSize}px Righteous, Arial`;
+            tCtx.fillStyle = 'white';
+            tCtx.textAlign = 'center';
+            tCtx.textBaseline = 'middle';
+            tCtx.fillText(text, width/2, height/2);
+
+            let data = tCtx.getImageData(0, 0, width, height).data;
+            let step = window.innerWidth > 768 ? 6 : 8; // Optimize for mobile
+            let newTargets = [];
+
+            for(let y=0; y<height; y+=step) {
+                for(let x=0; x<width; x+=step) {
+                    if(data[(y*width+x)*4+3] > 128) {
+                        // Generate colors based on position
+                        let r = Math.floor((x / width) * 255);
+                        let g = 215; // Keeping gold/cyan tones
+                        let b = Math.floor((y / height) * 255);
+                        let color = (text === '21') 
+                            ? `rgb(255, 215, ${b})` // Gold to white gradient
+                            : (Math.random() > 0.5 ? '#00d2ff' : '#ff007f'); // Cyan/Pink mix
+
+                        newTargets.push({x, y, color});
+                    }
+                }
+            }
+
+            // Sync particle pool
+            if (particles.length < newTargets.length) {
+                for (let i = particles.length; i < newTargets.length; i++) {
+                    particles.push(new Particle(Math.random()*width, Math.random()*height));
+                }
+            } else {
+                particles.splice(newTargets.length);
+            }
+
+            // Assign new targets
+            // Shuffle array so particles cross paths beautifully
+            newTargets.sort(() => Math.random() - 0.5);
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].destX = newTargets[i].x;
+                particles[i].destY = newTargets[i].y;
+                particles[i].color = newTargets[i].color;
+            }
+        }
+
+        // --- 3D TILT EFFECT FOR CARD ---
+        const card = document.getElementById('tiltCard');
+        document.addEventListener('mousemove', (e) => {
+            if(!document.getElementById('cardModal').classList.contains('active')) return;
+            
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // --- LETTER LOGIC ---
+        function openLetter(btnElement) {
+            if(btnElement) {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+            
+            // Scatter particles to background
+            particles.forEach(p => {
+                p.destX = Math.random() * width;
+                p.destY = Math.random() * height;
+                p.color = '#ffffff';
+                p.size = Math.random() * 1.5;
+            });
+
+            document.getElementById('cardModal').classList.add('active');
+            
+            // Reset card tilt
+            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            
+            typeWriter();
+        }
+
+        function closeLetter() {
+            document.getElementById('cardModal').classList.remove('active');
+        }
+
+        // --- TYPEWRITER ---
+        let typed = false;
+        function typeWriter() {
+            if(typed) return;
+            // EDIT THIS TEXT FOR THE BIRTHDAY PERSON
+            const text = "Welcome to chapter 21! 🥂\n\nThis is your year to shine, explore, and create unforgettable memories. You've grown into someone absolutely incredible, and the world is lucky to have you.\n\nCheers to the nights we won't remember with the friends we'll never forget. Let's celebrate YOU today!";
+            
+            const el = document.getElementById('msgArea');
+            el.innerHTML = "";
+            let i = 0;
+            let interval = setInterval(() => {
+                if(i < text.length) {
+                    el.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    typed = true;
+                }
+            }, 35);
+        }
+
+        // --- APP START ---
+        function startApp() {
+            const intro = document.getElementById('intro');
+            intro.style.transform = 'scale(1.2)';
+            intro.style.opacity = 0;
+            
+            setTimeout(() => {
+                intro.style.display = 'none';
+                document.getElementById('ui').classList.add('visible');
+                
+                // Play music automatically (Requires user interaction first, which the start button provides)
+                let bgMusic = document.getElementById('bgMusic');
+                bgMusic.volume = 0.5;
+                bgMusic.play().catch(e => console.log("Audio play prevented"));
+
+                warpTo('21');
+            }, 800);
+        }
+    </script>
+</body>
+</html>
