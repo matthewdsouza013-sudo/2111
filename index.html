@@ -25,6 +25,7 @@
             color: white;
             perspective: 1200px;
             cursor: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* --- SCREEN SHAKE FX --- */
@@ -37,42 +38,42 @@
             20%, 40%, 60%, 80% { transform: translate3d(3px, -3px, 0); }
         }
 
-        /* --- CUSTOM CURSOR --- */
+        /* --- CUSTOM CURSOR (Hidden on Touch Devices) --- */
         .cursor-dot {
-            position: fixed;
-            top: 0; left: 0;
+            position: fixed; top: 0; left: 0;
             width: 6px; height: 6px;
-            background: #fff;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10000;
+            background: #fff; border-radius: 50%;
+            pointer-events: none; z-index: 10000;
             transform: translate(-50%, -50%);
             box-shadow: 0 0 10px #fff, 0 0 20px var(--primary);
             transition: width 0.2s, height 0.2s;
         }
         .cursor-trail {
-            position: fixed;
-            top: 0; left: 0;
+            position: fixed; top: 0; left: 0;
             width: 40px; height: 40px;
             border: 1px solid rgba(0, 240, 255, 0.6);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
+            border-radius: 50%; pointer-events: none;
+            z-index: 9999; transform: translate(-50%, -50%);
             transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
             box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.2);
         }
-        body.hovering .cursor-trail {
-            width: 70px; height: 70px;
-            border-color: var(--gold);
-            background: rgba(255, 207, 0, 0.05);
-            backdrop-filter: blur(2px);
+        @media (hover: hover) and (pointer: fine) {
+            body.hovering .cursor-trail {
+                width: 70px; height: 70px;
+                border-color: var(--gold);
+                background: rgba(255, 207, 0, 0.05);
+                backdrop-filter: blur(2px);
+            }
+        }
+        /* Disable custom cursor on mobile */
+        @media (hover: none) and (pointer: coarse) {
+            body, html { cursor: auto; }
+            .cursor-dot, .cursor-trail { display: none !important; }
         }
 
         /* --- BACKGROUND --- */
         .celebration-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: 
                 radial-gradient(circle at 10% 20%, rgba(0, 240, 255, 0.08) 0%, transparent 45%),
                 radial-gradient(circle at 90% 80%, rgba(255, 0, 85, 0.08) 0%, transparent 45%),
@@ -81,11 +82,9 @@
             animation: breathe 10s ease-in-out infinite alternate;
         }
         .vignette {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            box-shadow: inset 0 0 200px rgba(0,0,0,0.95);
-            pointer-events: none;
-            z-index: 2;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.95);
+            pointer-events: none; z-index: 2;
         }
         @keyframes breathe {
             0% { transform: scale(1); filter: hue-rotate(0deg); }
@@ -93,343 +92,217 @@
         }
 
         canvas {
-            display: block;
-            position: absolute;
-            top: 0; left: 0;
-            z-index: 1;
-            mix-blend-mode: screen;
+            display: block; position: absolute;
+            top: 0; left: 0; z-index: 1; mix-blend-mode: screen;
         }
 
         /* --- BOOT TERMINAL --- */
         .terminal-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #020205;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 50px;
-            box-sizing: border-box;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #020205; z-index: 10000;
+            display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+            padding: 50px; box-sizing: border-box;
             font-family: 'Share Tech Mono', monospace;
-            color: var(--primary);
-            font-size: 1.2rem;
+            color: var(--primary); font-size: 1.2rem;
             text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
             transition: opacity 0.5s, transform 0.8s;
         }
 
         /* --- INTRO SCREEN --- */
         .intro-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(2, 2, 5, 0.8);
-            backdrop-filter: blur(25px);
-            z-index: 9998;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 2, 5, 0.85); backdrop-filter: blur(20px);
+            z-index: 9998; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none;
             transition: opacity 1.5s cubic-bezier(0.8, 0, 0.2, 1), transform 1.5s;
         }
 
         .avatar-container {
-            position: relative;
-            width: 220px;
-            height: 220px;
-            margin-bottom: 40px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: relative; width: 200px; height: 200px;
+            margin-bottom: 30px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
             animation: float 6s ease-in-out infinite;
         }
         .avatar-container::before, .avatar-container::after {
-            content: '';
-            position: absolute;
-            border-radius: 50%;
-            border: 2px solid transparent;
+            content: ''; position: absolute; border-radius: 50%; border: 2px solid transparent;
         }
         .avatar-container::before {
-            top: -15px; left: -15px; right: -15px; bottom: -15px;
-            border-top-color: var(--primary);
-            border-bottom-color: var(--secondary);
+            top: -12px; left: -12px; right: -12px; bottom: -12px;
+            border-top-color: var(--primary); border-bottom-color: var(--secondary);
             animation: spin 3s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-            box-shadow: 0 0 40px rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
         }
         .avatar-container::after {
-            top: -30px; left: -30px; right: -30px; bottom: -30px;
-            border-left-color: var(--gold);
-            border-right-color: rgba(255, 255, 255, 0.2);
+            top: -25px; left: -25px; right: -25px; bottom: -25px;
+            border-left-color: var(--gold); border-right-color: rgba(255, 255, 255, 0.2);
             animation: spinReverse 8s linear infinite;
         }
         .avatar-container img {
-            width: 100%; height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 4px solid rgba(255,255,255,0.9);
-            box-shadow: 0 0 80px rgba(255, 207, 0, 0.4);
-            z-index: 2;
+            width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.9);
+            box-shadow: 0 0 60px rgba(255, 207, 0, 0.4); z-index: 2;
         }
 
         .intro-title {
-            font-family: 'Righteous', cursive;
-            font-size: 4.5rem;
-            margin-bottom: 40px;
-            color: #fff;
-            letter-spacing: 10px;
-            text-transform: uppercase;
-            text-shadow: 
-                -3px 0 var(--secondary),
-                3px 0 var(--primary),
-                0 0 20px rgba(255,255,255,0.5); /* Chromatic Aberration Glitch */
+            font-family: 'Righteous', cursive; font-size: 3.5rem;
+            margin-bottom: 40px; color: #fff; letter-spacing: 8px;
+            text-transform: uppercase; text-align: center;
+            text-shadow: -3px 0 var(--secondary), 3px 0 var(--primary), 0 0 20px rgba(255,255,255,0.5);
             animation: float 6s ease-in-out infinite reverse;
         }
 
         .enter-btn {
-            padding: 18px 70px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-            font-size: 1.2rem;
-            color: #fff;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,255,255,0.1);
-            letter-spacing: 5px;
-            text-transform: uppercase;
+            padding: 16px 50px; font-family: 'Montserrat', sans-serif;
+            font-weight: 900; font-size: 1.1rem; color: #fff;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,255,255,0.1);
+            letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
             transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
             backdrop-filter: blur(10px);
         }
-        .enter-btn:hover {
-            background: var(--primary);
-            color: #000;
-            transform: scale(1.1);
-            box-shadow: 0 15px 50px var(--primary);
-            border-color: var(--primary);
+        @media (hover: hover) and (pointer: fine) {
+            .enter-btn:hover {
+                background: var(--primary); color: #000; transform: scale(1.1);
+                box-shadow: 0 15px 50px var(--primary); border-color: var(--primary);
+            }
         }
 
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes spinReverse { 100% { transform: rotate(-360deg); } }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 
-        /* --- UI CONTROLS & VISUALIZER --- */
+        /* --- UI CONTROLS --- */
         .ui-container {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
+            position: absolute; bottom: 30px; left: 50%;
             transform: translateX(-50%) translateY(50px);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            opacity: 0;
-            pointer-events: none;
+            z-index: 100; display: flex; flex-direction: column; align-items: center;
+            gap: 12px; opacity: 0; pointer-events: none;
             transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1) 0.5s;
+            width: 90%; max-width: 500px;
         }
-        .ui-container.visible {
-            opacity: 1;
-            pointer-events: auto;
-            transform: translateX(-50%) translateY(0);
-        }
+        .ui-container.visible { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
 
         .buttons-row {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            background: rgba(10, 10, 15, 0.6);
-            padding: 10px 20px;
-            border-radius: 50px;
-            backdrop-filter: blur(30px);
-            border: 1px solid rgba(255,255,255,0.1);
+            display: flex; align-items: center; justify-content: center; gap: 15px;
+            background: rgba(10, 10, 15, 0.65); padding: 10px 20px; border-radius: 50px;
+            backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1);
             box-shadow: 0 20px 50px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.2);
+            width: auto;
         }
 
-        /* Music Visualizer */
         .visualizer {
-            display: flex;
-            align-items: flex-end;
-            gap: 3px;
-            height: 25px;
-            padding-right: 15px;
-            border-right: 1px solid rgba(255,255,255,0.2);
+            display: flex; align-items: flex-end; gap: 3px;
+            height: 20px; padding-right: 15px; border-right: 1px solid rgba(255,255,255,0.2);
         }
-        .vis-bar {
-            width: 4px;
-            background: var(--primary);
-            border-radius: 2px;
-            height: 5px;
-            box-shadow: 0 0 10px var(--primary);
-        }
+        .vis-bar { width: 3px; background: var(--primary); border-radius: 2px; height: 5px; box-shadow: 0 0 10px var(--primary); }
         .visualizer.active .vis-bar { animation: bounceBar 0.5s infinite alternate ease-in; }
         .visualizer.active .vis-bar:nth-child(2) { animation-delay: 0.1s; background: var(--secondary); box-shadow: 0 0 10px var(--secondary);}
         .visualizer.active .vis-bar:nth-child(3) { animation-delay: 0.2s; background: var(--gold); box-shadow: 0 0 10px var(--gold);}
-        .visualizer.active .vis-bar:nth-child(4) { animation-delay: 0.3s; }
-        @keyframes bounceBar { 0% { height: 5px; } 100% { height: 25px; } }
+        @keyframes bounceBar { 0% { height: 4px; } 100% { height: 20px; } }
 
         .nav-btn {
-            background: transparent;
-            border: none;
-            color: rgba(255, 255, 255, 0.5);
-            padding: 12px 25px;
-            font-family: 'Righteous', cursive;
-            font-size: 1rem;
-            letter-spacing: 3px;
-            border-radius: 30px;
-            transition: 0.3s;
-            position: relative;
+            background: transparent; border: none; color: rgba(255, 255, 255, 0.5);
+            padding: 10px 15px; font-family: 'Righteous', cursive; font-size: 0.9rem;
+            letter-spacing: 2px; border-radius: 30px; cursor: pointer; transition: 0.3s; position: relative;
         }
-        .nav-btn.active, .nav-btn:hover {
-            color: #fff;
-            text-shadow: 0 0 15px #fff;
-        }
+        .nav-btn.active { color: #fff; text-shadow: 0 0 15px #fff; }
         .nav-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: 5px; left: 50%; transform: translateX(-50%);
-            width: 50%; height: 3px;
-            background: var(--gold);
-            border-radius: 5px;
-            box-shadow: 0 0 12px var(--gold);
+            content: ''; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+            width: 40%; height: 2px; background: var(--gold); border-radius: 5px; box-shadow: 0 0 10px var(--gold);
         }
-        .hint-text {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.4);
-            letter-spacing: 5px;
-            text-transform: uppercase;
-        }
+        
+        .hint-text { font-size: 0.75rem; color: rgba(255, 255, 255, 0.5); letter-spacing: 3px; text-transform: uppercase; text-align: center;}
 
         /* --- MASTERPIECE GLASS CARD --- */
         .card-wrapper {
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 1100px;
-            max-width: 95%;
-            height: 650px;
-            transform: translate(-50%, -50%) perspective(3000px) rotateX(20deg) scale(0.9);
-            opacity: 0;
-            pointer-events: none;
+            position: absolute; top: 50%; left: 50%;
+            width: 1100px; max-width: 92%; height: 650px; max-height: 80vh;
+            transform: translate(-50%, -50%) perspective(3000px) rotateX(15deg) scale(0.9);
+            opacity: 0; pointer-events: none;
             transition: opacity 0.8s, transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 200;
         }
         .card-wrapper.active {
-            opacity: 1;
-            pointer-events: auto;
+            opacity: 1; pointer-events: auto;
             transform: translate(-50%, -50%) perspective(3000px) rotateX(0deg) scale(1);
         }
 
         .birthday-card {
-            width: 100%; height: 100%;
-            border-radius: 35px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 50px 150px rgba(0,0,0,1);
-            overflow: hidden;
-            position: relative;
-            transform-style: preserve-3d;
+            width: 100%; height: 100%; border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 30px 100px rgba(0,0,0,1);
+            overflow: hidden; position: relative; transform-style: preserve-3d;
         }
 
         .birthday-card > img {
-            position: absolute;
-            top: -5%; left: -5%;
-            width: 110%; height: 110%; /* Extra size for parallax */
-            object-fit: cover;
-            z-index: 1;
-            transition: transform 0.1s linear;
+            position: absolute; top: -5%; left: -5%; width: 110%; height: 110%;
+            object-fit: cover; z-index: 1; transition: transform 0.1s linear;
         }
 
-        /* Interactive Lighting Glass Panel */
         .glass-panel {
-            position: absolute;
-            top: 5%; right: 4%;
-            width: 48%; height: 90%;
-            background: rgba(10, 10, 15, 0.7);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: -20px 20px 60px rgba(0,0,0,0.8);
-            z-index: 2;
-            padding: 50px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            transform: translateZ(80px); /* Massive 3D pop */
-            overflow: hidden;
-            /* Mouse Tracking Glow */
-            --mouse-x: 50%;
-            --mouse-y: 50%;
+            position: absolute; top: 5%; right: 4%; width: 48%; height: 90%;
+            background: rgba(10, 10, 15, 0.75); backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
+            border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: -20px 20px 60px rgba(0,0,0,0.8); z-index: 2; padding: 40px;
+            display: flex; flex-direction: column; justify-content: center;
+            transform: translateZ(50px); overflow: hidden;
+            --mouse-x: 50%; --mouse-y: 50%;
         }
         
-        .glass-panel::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle 300px at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.15), transparent 80%);
-            z-index: -1;
-            pointer-events: none;
+        @media (hover: hover) and (pointer: fine) {
+            .glass-panel::before {
+                content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+                background: radial-gradient(circle 250px at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.12), transparent 80%);
+                z-index: -1; pointer-events: none;
+            }
         }
 
         .glass-panel h2 {
-            font-family: 'Pacifico', cursive;
-            font-size: 4.5rem;
-            margin: 0 0 20px 0;
+            font-family: 'Pacifico', cursive; font-size: 3.5rem; margin: 0 0 15px 0;
             background: linear-gradient(135deg, var(--gold), #ff5e00, var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 4px 4px 25px rgba(255, 207, 0, 0.2);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 15px rgba(255, 207, 0, 0.2);
         }
 
         .typewriter-text {
-            font-size: 1.15rem;
-            line-height: 1.9;
-            color: #eee;
-            font-weight: 300;
-            min-height: 280px;
+            font-size: 1.05rem; line-height: 1.7; color: #eee; font-weight: 300; min-height: 250px;
         }
         .cursor-blink {
-            display: inline-block;
-            width: 2px; background-color: var(--primary); margin-left: 2px;
+            display: inline-block; width: 2px; background-color: var(--primary); margin-left: 2px;
             animation: blink 0.8s infinite;
         }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         .close-btn {
-            align-self: flex-start;
-            margin-top: 20px;
-            background: #fff;
-            color: #000;
-            border: none;
-            padding: 15px 45px;
-            border-radius: 50px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 800;
-            font-size: 1rem;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-        .close-btn:hover {
-            transform: scale(1.1);
-            background: var(--primary);
-            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.6);
+            align-self: flex-start; margin-top: 15px; background: #fff; color: #000; border: none;
+            padding: 12px 35px; border-radius: 50px; font-family: 'Montserrat', sans-serif; cursor: pointer;
+            font-weight: 800; font-size: 0.9rem; transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(255,255,255,0.2); text-transform: uppercase; letter-spacing: 2px;
         }
 
-        /* Mobile */
-        @media (max-width: 950px) {
-            .glass-panel { width: 92%; height: auto; bottom: 4%; top: auto; left: 4%; right: 4%; padding: 30px; transform: translateZ(30px); }
-            .glass-panel h2 { font-size: 3.2rem; }
-            .typewriter-text { min-height: 220px; font-size: 1rem; }
-            .intro-title { font-size: 3rem; letter-spacing: 5px; }
-            .avatar-container { width: 160px; height: 160px; }
-            .buttons-row { flex-wrap: wrap; justify-content: center; padding: 10px; gap: 10px; }
-            .cursor-dot, .cursor-trail { display: none; }
-            body { cursor: auto; }
+        /* --- EXTREME MOBILE OPTIMIZATIONS --- */
+        @media (max-width: 768px) {
+            .terminal-screen { padding: 25px; font-size: 0.95rem; }
+            .intro-title { font-size: 2.2rem; letter-spacing: 4px; text-shadow: -2px 0 var(--secondary), 2px 0 var(--primary); }
+            .avatar-container { width: 140px; height: 140px; margin-bottom: 25px; }
+            .enter-btn { padding: 14px 30px; font-size: 0.95rem; }
+            
+            .buttons-row { gap: 5px; padding: 8px 12px; }
+            .nav-btn { font-size: 0.75rem; padding: 10px; letter-spacing: 1px; }
+            .visualizer { display: none; } /* Hide visualizer on mobile for space */
+            
+            /* Make glass panel centered and scrollable for mobile */
+            .glass-panel { 
+                width: 88%; height: 85%; top: 50%; left: 50%; 
+                transform: translate(-50%, -50%) translateZ(20px); 
+                padding: 25px; border-radius: 20px; overflow-y: auto; justify-content: flex-start;
+            }
+            .glass-panel h2 { font-size: 2.8rem; margin-top: 10px; text-align: center; }
+            .typewriter-text { font-size: 0.95rem; line-height: 1.6; min-height: auto; }
+            .close-btn { align-self: center; width: 100%; margin-top: 25px; padding: 14px 0; text-align: center; }
+            
+            .hint-text { font-size: 0.65rem; }
+            body.shake { animation: none; } /* Disable shake on mobile (feels jarring) */
         }
     </style>
 </head>
@@ -464,7 +337,6 @@
     <div class="card-wrapper" id="cardModal">
         <div class="birthday-card" id="tiltCard">
             <img id="cardBgImg" src="a2.jpg" alt="Ajoyce 21st" onerror="this.src='https://images.unsplash.com/photo-1530103862676-de8892bc9524?w=1200';">
-            
             <div class="glass-panel" id="glassPanel">
                 <h2>Happy 21st!</h2>
                 <div class="typewriter-text" id="msgArea"></div>
@@ -478,10 +350,7 @@
         <div class="hint-text">✨ Tap the sky to ignite fireworks ✨</div>
         <div class="buttons-row">
             <div class="visualizer" id="audioVis">
-                <div class="vis-bar"></div>
-                <div class="vis-bar"></div>
-                <div class="vis-bar"></div>
-                <div class="vis-bar"></div>
+                <div class="vis-bar"></div><div class="vis-bar"></div><div class="vis-bar"></div>
             </div>
             <button class="nav-btn active interactive magnetic" onclick="warpTo('21', this)">LEVEL 21</button>
             <button class="nav-btn interactive magnetic" onclick="warpTo('🥂', this)">CHEERS</button>
@@ -494,102 +363,89 @@
     </audio>
 
     <script>
-        // --- CUSTOM CURSOR & MAGNETIC BUTTONS ---
+        const isMobile = window.innerWidth <= 768;
+
+        // --- CUSTOM CURSOR & MAGNETIC BUTTONS (Desktop Only) ---
         const cursorDot = document.getElementById('cursorDot');
         const cursorTrail = document.getElementById('cursorTrail');
         const glassPanel = document.getElementById('glassPanel');
         
-        let mouseX = window.innerWidth / 2;
-        let mouseY = window.innerHeight / 2;
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
         let trailX = mouseX, trailY = mouseY;
 
-        window.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX; mouseY = e.clientY;
-            cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-            
-            // Glass Panel Flashlight Effect
-            if(document.getElementById('cardModal').classList.contains('active')) {
-                let rect = glassPanel.getBoundingClientRect();
-                let x = e.clientX - rect.left;
-                let y = e.clientY - rect.top;
-                glassPanel.style.setProperty('--mouse-x', `${x}px`);
-                glassPanel.style.setProperty('--mouse-y', `${y}px`);
+        if (!isMobile && window.matchMedia("(pointer: fine)").matches) {
+            window.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX; mouseY = e.clientY;
+                cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+                
+                if(document.getElementById('cardModal').classList.contains('active')) {
+                    let rect = glassPanel.getBoundingClientRect();
+                    let x = e.clientX - rect.left, y = e.clientY - rect.top;
+                    glassPanel.style.setProperty('--mouse-x', `${x}px`);
+                    glassPanel.style.setProperty('--mouse-y', `${y}px`);
+                }
+            });
+
+            function animateCursor() {
+                trailX += (mouseX - trailX) * 0.2; trailY += (mouseY - trailY) * 0.2;
+                cursorTrail.style.transform = `translate(${trailX}px, ${trailY}px) translate(-50%, -50%)`;
+                requestAnimationFrame(animateCursor);
             }
-        });
+            animateCursor();
 
-        function animateCursor() {
-            trailX += (mouseX - trailX) * 0.2;
-            trailY += (mouseY - trailY) * 0.2;
-            cursorTrail.style.transform = `translate(${trailX}px, ${trailY}px) translate(-50%, -50%)`;
-            requestAnimationFrame(animateCursor);
+            document.querySelectorAll('.interactive').forEach(el => {
+                el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+            });
+
+            document.querySelectorAll('.magnetic').forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    let rect = btn.getBoundingClientRect();
+                    let x = e.clientX - rect.left - rect.width / 2;
+                    let y = e.clientY - rect.top - rect.height / 2;
+                    btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) scale(1.05)`;
+                });
+                btn.addEventListener('mouseleave', () => btn.style.transform = `translate(0px, 0px) scale(1)`);
+            });
         }
-        animateCursor();
-
-        document.querySelectorAll('.interactive').forEach(el => {
-            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
-        });
-
-        // Magnetic Pull Effect
-        document.querySelectorAll('.magnetic').forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                let rect = btn.getBoundingClientRect();
-                let x = e.clientX - rect.left - rect.width / 2;
-                let y = e.clientY - rect.top - rect.height / 2;
-                btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px) scale(1.1)`;
-            });
-            btn.addEventListener('mouseleave', () => {
-                btn.style.transform = `translate(0px, 0px) scale(1)`;
-            });
-        });
 
         // --- TERMINAL BOOT SEQUENCE ---
         window.onload = () => {
             const term = document.getElementById('termText');
             const lines = [
-                "> SYSTEM.INIT()",
-                "> DECRYPTING PROTOCOLS...",
-                "> BYPASSING MAINFRAME...",
-                "> LOCATING TARGET: AJOYCE",
-                "> TARGET ACQUIRED.",
-                "> LOADING LEVEL_21_ENVIRONMENT.EXE",
-                "> ACCESS GRANTED."
+                "> SYSTEM.INIT()", "> DECRYPTING PROTOCOLS...", "> BYPASSING MAINFRAME...",
+                "> LOCATING TARGET: AJOYCE", "> TARGET ACQUIRED.", "> LOADING LEVEL_21.EXE", "> ACCESS GRANTED."
             ];
             let i = 0;
             let interval = setInterval(() => {
                 if(i < lines.length) {
-                    term.innerHTML += lines[i] + "<br>";
-                    i++;
+                    term.innerHTML += lines[i] + "<br>"; i++;
                 } else {
                     clearInterval(interval);
                     setTimeout(() => {
                         document.getElementById('terminal').style.opacity = '0';
-                        document.getElementById('terminal').style.transform = 'scale(1.5)';
+                        document.getElementById('terminal').style.transform = 'scale(1.2)';
                         setTimeout(() => {
                             document.getElementById('terminal').style.display = 'none';
                             let intro = document.getElementById('intro');
-                            intro.style.pointerEvents = 'auto';
-                            intro.style.opacity = '1';
-                        }, 800);
-                    }, 500);
+                            intro.style.pointerEvents = 'auto'; intro.style.opacity = '1';
+                        }, 500);
+                    }, 400);
                 }
-            }, 300);
+            }, isMobile ? 150 : 250); // Faster on mobile
         };
 
 
-        // --- CANVAS PHYSICS ---
+        // --- CANVAS PHYSICS (Throttled for Mobile) ---
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        let width, height;
-        let particles = [], fireworks = [], stardust = [];
+        let width, height, particles = [], fireworks = [], stardust = [];
         let isScrambling = false;
         
         function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            
+            width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight;
             stardust = [];
-            let count = window.innerWidth > 768 ? 120 : 60;
+            let count = width > 768 ? 120 : 40; // Less stardust on mobile
             for(let i=0; i<count; i++) {
                 stardust.push({
                     x: Math.random() * width, y: Math.random() * height,
@@ -602,31 +458,33 @@
         window.addEventListener('resize', resize);
         resize();
 
+        // Support both mouse and touch for fireworks
         window.addEventListener('pointerdown', e => {
             if(document.getElementById('cardModal').classList.contains('active')) return;
             if(e.target.closest('.interactive') || e.target.closest('.ui-container')) return;
-            createFirework(e.clientX, e.clientY);
-            triggerScreenShake();
             
-            cursorTrail.style.width = '100px'; cursorTrail.style.height = '100px';
-            setTimeout(() => { cursorTrail.style.width = ''; cursorTrail.style.height = ''; }, 150);
+            createFirework(e.clientX, e.clientY);
+            if(!isMobile) triggerScreenShake();
+            
+            if(!isMobile) {
+                cursorTrail.style.width = '100px'; cursorTrail.style.height = '100px';
+                setTimeout(() => { cursorTrail.style.width = ''; cursorTrail.style.height = ''; }, 150);
+            }
         });
 
         function triggerScreenShake() {
             document.body.classList.remove('shake');
-            void document.body.offsetWidth; // Trigger reflow
+            void document.body.offsetWidth; 
             document.body.classList.add('shake');
         }
 
-        // Morphing Particles
         class Particle {
             constructor(x, y) {
                 this.x = Math.random() * width; this.y = Math.random() * height;
                 this.destX = x; this.destY = y;
                 this.vx = (Math.random() - 0.5) * 40; this.vy = (Math.random() - 0.5) * 40;
                 this.size = Math.random() * 2 + 1;
-                this.friction = 0.8; this.spring = 0.08;
-                this.color = '#fff';
+                this.friction = 0.8; this.spring = 0.08; this.color = '#fff';
             }
             update() {
                 if (isScrambling) {
@@ -634,38 +492,37 @@
                 } else {
                     this.vx += (this.destX - this.x) * this.spring;
                     this.vy += (this.destY - this.y) * this.spring;
-
-                    let mDx = mouseX - this.x, mDy = mouseY - this.y;
-                    let dist = Math.sqrt(mDx*mDx + mDy*mDy);
-                    if (dist < 150) {
-                        let force = (150 - dist) / 150;
-                        let angle = Math.atan2(mDy, mDx);
-                        this.vx -= Math.cos(angle) * force * 20;
-                        this.vy -= Math.sin(angle) * force * 20;
+                    
+                    if(!isMobile) {
+                        let mDx = mouseX - this.x, mDy = mouseY - this.y;
+                        let dist = Math.sqrt(mDx*mDx + mDy*mDy);
+                        if (dist < 120) {
+                            let force = (120 - dist) / 120;
+                            let angle = Math.atan2(mDy, mDx);
+                            this.vx -= Math.cos(angle) * force * 20;
+                            this.vy -= Math.sin(angle) * force * 20;
+                        }
                     }
                 }
                 this.vx *= this.friction; this.vy *= this.friction;
                 this.x += this.vx; this.y += this.vy;
             }
             draw() {
-                ctx.globalAlpha = 0.6;
-                ctx.fillStyle = this.color;
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size * 2.5, 0, Math.PI*2); ctx.fill();
-                ctx.globalAlpha = 1.0;
-                ctx.fillStyle = '#fff';
+                ctx.globalAlpha = 0.6; ctx.fillStyle = this.color;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI*2); ctx.fill();
+                ctx.globalAlpha = 1.0; ctx.fillStyle = '#fff';
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size * 0.8, 0, Math.PI*2); ctx.fill();
             }
         }
 
-        // Explosive Fireworks
         class FireworkParticle {
             constructor(x, y, isSpark) {
                 this.x = x; this.y = y;
                 let angle = Math.random() * Math.PI * 2;
-                let speed = isSpark ? Math.random() * 6 + 2 : Math.random() * 18 + 3;
+                let speed = isSpark ? Math.random() * 5 + 2 : Math.random() * 15 + 3;
                 this.vx = Math.cos(angle) * speed; this.vy = Math.sin(angle) * speed;
-                this.size = Math.random() * 2.5 + 1.5;
-                this.life = 1.0; this.decay = Math.random() * 0.015 + 0.01;
+                this.size = Math.random() * 2.5 + 1;
+                this.life = 1.0; this.decay = Math.random() * 0.02 + 0.01;
                 
                 const colors = ['#00f0ff', '#ff0055', '#ffcf00', '#ffffff'];
                 this.color = colors[Math.floor(Math.random() * colors.length)];
@@ -673,7 +530,7 @@
             }
             update() {
                 this.x += this.vx; this.y += this.vy;
-                this.vy += 0.15; this.vx *= 0.96; this.life -= this.decay;
+                this.vy += 0.15; this.vx *= 0.95; this.life -= this.decay;
             }
             draw() {
                 ctx.globalAlpha = this.life;
@@ -688,13 +545,14 @@
         }
 
         function createFirework(x, y) {
-            for(let i=0; i<80; i++) fireworks.push(new FireworkParticle(x, y, false));
-            for(let i=0; i<40; i++) fireworks.push(new FireworkParticle(x, y, true));
+            let fwCount = isMobile ? 40 : 80;
+            let spCount = isMobile ? 20 : 40;
+            for(let i=0; i<fwCount; i++) fireworks.push(new FireworkParticle(x, y, false));
+            for(let i=0; i<spCount; i++) fireworks.push(new FireworkParticle(x, y, true));
         }
 
         function animate() {
             ctx.fillStyle = 'rgba(2, 2, 5, 0.3)'; ctx.fillRect(0, 0, width, height);
-
             stardust.forEach(star => {
                 star.y += star.speedY; star.x += star.speedX;
                 if(star.y < 0) { star.y = height; star.x = Math.random() * width; }
@@ -702,7 +560,6 @@
                 ctx.beginPath(); ctx.arc(star.x, star.y, star.size, 0, Math.PI*2); ctx.fill();
             });
             ctx.globalAlpha = 1.0;
-
             particles.forEach(p => { p.update(); p.draw(); });
             for(let i = fireworks.length - 1; i >= 0; i--) {
                 fireworks[i].update(); fireworks[i].draw();
@@ -723,23 +580,23 @@
                 isScrambling = false;
                 calculateTargets(text);
                 createFirework(width/2, height/2);
-                triggerScreenShake();
-            }, 400);
+                if(!isMobile) triggerScreenShake();
+            }, 300);
         }
 
         function calculateTargets(text) {
             let tCanvas = document.createElement('canvas'); let tCtx = tCanvas.getContext('2d');
             tCanvas.width = width; tCanvas.height = height;
 
-            let fontSize = Math.min(width / 2.5, 350);
-            if(text === '🥂') fontSize = Math.min(width / 3, 250);
+            let fontSize = Math.min(width / 2.2, 350);
+            if(text === '🥂') fontSize = Math.min(width / 2.8, 250);
 
             tCtx.font = `900 ${fontSize}px Righteous, Arial`;
             tCtx.fillStyle = 'white'; tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
             tCtx.fillText(text, width/2, height/2);
 
             let data = tCtx.getImageData(0, 0, width, height).data;
-            let step = window.innerWidth > 768 ? 6 : 9; 
+            let step = isMobile ? 10 : 8; // Less particles on mobile
             let newTargets = [];
 
             for(let y=0; y<height; y+=step) {
@@ -768,27 +625,27 @@
             }
         }
 
-        // --- 3D CINEMATIC TILT ---
+        // --- 3D CINEMATIC TILT (Desktop Only) ---
         const cardWrapper = document.getElementById('cardModal');
         const card = document.getElementById('tiltCard');
         const cardImg = document.getElementById('cardBgImg');
         
-        document.addEventListener('mousemove', (e) => {
-            if(!cardWrapper.classList.contains('active')) return;
-            let rect = cardWrapper.getBoundingClientRect();
-            let x = e.clientX - rect.left, y = e.clientY - rect.top;
-            let centerX = rect.width / 2, centerY = rect.height / 2;
-            
-            let rotateX = ((y - centerY) / centerY) * -12; 
-            let rotateY = ((x - centerX) / centerX) * 12;
-            
-            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-            cardImg.style.transform = `translate(${rotateY * -1.5}px, ${rotateX * 1.5}px)`; 
-        });
-        document.addEventListener('mouseleave', () => {
-            card.style.transform = `rotateX(0deg) rotateY(0deg)`;
-            cardImg.style.transform = `translate(0,0)`;
-        });
+        if(!isMobile) {
+            document.addEventListener('mousemove', (e) => {
+                if(!cardWrapper.classList.contains('active')) return;
+                let rect = cardWrapper.getBoundingClientRect();
+                let x = e.clientX - rect.left, y = e.clientY - rect.top;
+                let centerX = rect.width / 2, centerY = rect.height / 2;
+                let rotateX = ((y - centerY) / centerY) * -8; 
+                let rotateY = ((x - centerX) / centerX) * 8;
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                cardImg.style.transform = `translate(${rotateY * -1}px, ${rotateX * 1}px)`; 
+            });
+            document.addEventListener('mouseleave', () => {
+                card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+                cardImg.style.transform = `translate(0,0)`;
+            });
+        }
 
         // --- CARD / TYPEWRITER LOGIC ---
         function openLetter(btnElement) {
@@ -796,7 +653,6 @@
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                 btnElement.classList.add('active');
             }
-            
             isScrambling = true;
             setTimeout(() => {
                 isScrambling = false;
@@ -811,41 +667,34 @@
             typeWriter();
         }
 
-        function closeLetter() {
-            cardWrapper.classList.remove('active');
-        }
+        function closeLetter() { cardWrapper.classList.remove('active'); }
 
         let typed = false;
         function typeWriter() {
             if(typed) return;
             const text = "Welcome to Chapter 21 Baby!! 🥂✨\n\nA brand new chapter begins today, filled with endless opportunities, exciting adventures, and memories waiting to be made.\n\nYou've grown into an amazing person, and everyone who's lucky enough to know you is better for it, especially me. Here's to chasing dreams, embracing every moment, and celebrating every little victory along the way.\n\nCheers to the nights we won't remember, with the friends we'll never forget. 🍻\n\nHappy 21st Birthday! Today is all about celebrating you. Wishing you a year filled with happiness, success, laughter, and unforgettable moments with or without me. Make every page of this new chapter count! 🎉🎂";
             
-            const el = document.getElementById('msgArea');
-            el.innerHTML = "";
-            let i = 0;
-            
+            const el = document.getElementById('msgArea'); el.innerHTML = ""; let i = 0;
             let interval = setInterval(() => {
                 if(i < text.length) {
                     let char = text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
                     el.innerHTML = el.innerHTML.replace('<span class="cursor-blink">|</span>', '');
                     el.innerHTML += char + '<span class="cursor-blink">|</span>';
                     i++;
-                } else {
-                    clearInterval(interval);
-                    typed = true;
-                }
+                    if(isMobile) glassPanel.scrollTop = glassPanel.scrollHeight; // Auto-scroll on mobile
+                } else { clearInterval(interval); typed = true; }
             }, 25);
         }
 
         // --- SYSTEM BOOT ---
         function startApp() {
             const intro = document.getElementById('intro');
-            intro.style.transform = 'scale(1.5) translateY(-50px)';
+            intro.style.transform = 'scale(1.2) translateY(-20px)';
             intro.style.opacity = 0;
             
-            createFirework(width/2, height/2); triggerScreenShake();
-            setTimeout(() => { createFirework(width/3, height/3); triggerScreenShake(); }, 200);
-            setTimeout(() => { createFirework(width*0.6, height*0.7); triggerScreenShake(); }, 400);
+            createFirework(width/2, height/2); if(!isMobile) triggerScreenShake();
+            setTimeout(() => { createFirework(width/3, height/3); if(!isMobile) triggerScreenShake(); }, 200);
+            setTimeout(() => { createFirework(width*0.6, height*0.7); if(!isMobile) triggerScreenShake(); }, 400);
 
             setTimeout(() => {
                 intro.style.display = 'none';
@@ -857,7 +706,7 @@
                 bgMusic.play().catch(e => console.log("Audio prevented."));
 
                 warpTo('21');
-            }, 1000);
+            }, 800);
         }
     </script>
 </body>
